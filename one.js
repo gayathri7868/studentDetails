@@ -95,3 +95,65 @@ function edit(id) {
 //         .then(response => console.log(response.data))
 // }
 
+// function sortAsc() {
+//     axios(`http://localhost:3000/students`)
+//         .then(response => {
+//             const data = response.data
+//             let sorted=data.sort(a,b)
+//             console.log(data)
+//         }
+//         )
+
+// }
+
+function sortByField(field) {
+    return function (a, b) {
+        if (a[field] > b[field]) {
+            return 1;
+        } else if (a[field] < b[field]) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+}
+
+function sortAsc(str) {
+    const tableBody = document.getElementById('tb');
+    axios(`http://localhost:3000/students`)
+        .then(response => {
+            tableBody.innerText = ""
+            const data = response.data
+            data.sort(sortByField(str))
+            data.forEach(element => {
+                console.log("success")
+                const row = document.createElement('tr');
+
+                const rollNoCell = document.createElement('td');
+                rollNoCell.textContent = element.rollno;
+                row.appendChild(rollNoCell);
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = element.name;
+                row.appendChild(nameCell);
+
+                const ageCell = document.createElement('td');
+                ageCell.textContent = element.age;
+                row.appendChild(ageCell);
+
+                const courseCell = document.createElement('td');
+                courseCell.textContent = element.course;
+                row.appendChild(courseCell);
+
+                const actionCell = document.createElement('td');
+                actionCell.innerHTML = `<button onclick="edit('${element.id}','${element.rollno}','${element.name}','${element.age}','${element.course}')"><i class="fa-solid fa-pen-to-square"></i></button>` + `<button onclick="deleteData(${element.id})"><i class='fas fa-trash-alt' style='font-size:15px'></i></button>`
+                row.appendChild(actionCell)
+
+                tableBody.appendChild(row);
+
+            }
+            )
+        }
+        )
+}
