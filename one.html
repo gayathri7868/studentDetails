@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"   />
+    <!-- <script src=".\node_modules\axios\dist\axios.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="one.css">
+</head>
+
+<body>
+    <h1>
+        <center>Student Management System</center>
+    </h1>
+    <div class="container">
+        <input placeholder="enter rollno" id="rollno" type="text" class="items">
+        <input placeholder="enter name" id="name" type="text">
+        <input placeholder="enter age" id="age" type="text">
+        <input placeholder="enter course" id="course" type="text">
+        <button onclick="addData()">Add Student Details</button>
+    </div>
+
+
+
+    <br><br>
+    <table class="studentdetails">
+        <thead>
+            <tr>
+                <th>Rollno</th>
+                <th>Name</th>
+                <th>age</th>
+                <th>course</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+
+        </tbody>
+    </table>
+    <script src="one.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+table,
+th,
+td {
+    border: 1px solid black;
+    width: 100vw;
+    font-size: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 2px solid black;
+    height: 40px;
+    background-color: rgb(230, 235, 236);
+
+}
+
+input,
+button {
+    border: 1px solid black;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+body {
+    background-color: rgb(192, 199, 199);
+}
