@@ -1,59 +1,41 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     display()
-    // document.getElementById()
 })
 
 
 
 function display() {
-    const tableBody = document.getElementById('tb');
     axios.get(`http://localhost:3000/students`)
         .then(response => {
             const data = response.data
-            tableBody.innerText = ""
-            data.forEach(element => {
-                console.log("success")
-                const row = document.createElement('tr');
-
-                const rollNoCell = document.createElement('td');
-                rollNoCell.textContent = element.rollno;
-                row.appendChild(rollNoCell);
-
-                const nameCell = document.createElement('td');
-                nameCell.textContent = element.name;
-                row.appendChild(nameCell);
-
-                const ageCell = document.createElement('td');
-                ageCell.textContent = element.age;
-                row.appendChild(ageCell);
-
-                const courseCell = document.createElement('td');
-                courseCell.textContent = element.course;
-                row.appendChild(courseCell);
-
-                const actionCell = document.createElement('td');
-                actionCell.innerHTML = `<button onclick="edit('${element.id}','${element.rollno}','${element.name}','${element.age}','${element.course}')"><i class="fa-solid fa-pen-to-square"></i></button>` + `<button onclick="deleteData(${element.id})"><i class='fas fa-trash-alt' style='font-size:15px'></i></button>`
-                row.appendChild(actionCell)
-
-                tableBody.appendChild(row);
-            });
+            fetchData(data)
         })
 }
 
 async function addData() {
-    let rollno = document.getElementById("rollno").value
-    let name = document.getElementById("name").value
-    let age = document.getElementById("age").value
-    let course = document.getElementById("course").value
-    let id = Math.floor(Math.random() * 1000).toString()
-    const data = { id, rollno, name, age, course };
-    try {
-        await axios.post(`http://localhost:3000/students`, data)
-        display()
-    }
-    catch (err) {
-        console.log(err)
-    }
+    await search().then(result => {
+        if (result) {
+            console.log("success")
+            alert("student exists !!!")
+
+        } else {
+
+            let rollno = document.getElementById("rollno").value
+            let name = document.getElementById("name").value
+            let age = document.getElementById("age").value
+            let course = document.getElementById("course").value
+            let id = Math.floor(Math.random() * 1000).toString()
+            const data = { id, rollno, name, age, course };
+            try {
+                axios.post(`http://localhost:3000/students`, data)
+                display()
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+    })
 
 
 }
@@ -83,34 +65,21 @@ function edit(id) {
     }
     axios.patch(`http://localhost:3000/students/${id}`, data)
         .then(response => console.log("success1"))
-
-
-
-
 }
-
-// function edit(id) {
-//     let name = document.getElementById("name").value
-//     axios.patch(`http://localhost:3000/students/${id}`, { "name": name })
-//         .then(response => console.log(response.data))
-// }
-
-// function sortAsc() {
-//     axios(`http://localhost:3000/students`)
-//         .then(response => {
-//             const data = response.data
-//             let sorted=data.sort(a,b)
-//             console.log(data)
-//         }
-//         )
-
-// }
 
 function sortByField(field) {
     return function (a, b) {
-        if (a[field] > b[field]) {
+        if (field == 'rollno' || field == 'age') {
+            num1 = Number(a[field])
+            num2 = Number(b[field])
+        }
+        else {
+            num1 = a[field]
+            num2 = b[field]
+        }
+        if (num1 > num2) {
             return 1;
-        } else if (a[field] < b[field]) {
+        } else if (num1 < num2) {
             return -1;
         }
         else {
@@ -120,40 +89,62 @@ function sortByField(field) {
 }
 
 function sortAsc(str) {
-    const tableBody = document.getElementById('tb');
     axios(`http://localhost:3000/students`)
         .then(response => {
-            tableBody.innerText = ""
             const data = response.data
             data.sort(sortByField(str))
-            data.forEach(element => {
-                console.log("success")
-                const row = document.createElement('tr');
-
-                const rollNoCell = document.createElement('td');
-                rollNoCell.textContent = element.rollno;
-                row.appendChild(rollNoCell);
-
-                const nameCell = document.createElement('td');
-                nameCell.textContent = element.name;
-                row.appendChild(nameCell);
-
-                const ageCell = document.createElement('td');
-                ageCell.textContent = element.age;
-                row.appendChild(ageCell);
-
-                const courseCell = document.createElement('td');
-                courseCell.textContent = element.course;
-                row.appendChild(courseCell);
-
-                const actionCell = document.createElement('td');
-                actionCell.innerHTML = `<button onclick="edit('${element.id}','${element.rollno}','${element.name}','${element.age}','${element.course}')"><i class="fa-solid fa-pen-to-square"></i></button>` + `<button onclick="deleteData(${element.id})"><i class='fas fa-trash-alt' style='font-size:15px'></i></button>`
-                row.appendChild(actionCell)
-
-                tableBody.appendChild(row);
-
-            }
-            )
+            fetchData(data)
         }
         )
 }
+
+async function search() {
+    ele = []
+    let b = false
+    let a = document.getElementById("rollno").value
+    await axios.get(`http://localhost:3000/students`)
+        .then(response => {
+            const data = response.data
+            data.forEach(element => {
+                if (element.rollno == a) {
+                    ele.push(element)
+                    b = true
+                }
+            })
+
+        })
+    console.log(ele)
+    fetchData(ele)
+    return b
+}
+function fetchData(data) {
+    const tableBody = document.getElementById('tb');
+    tableBody.innerText = ""
+    data.forEach(element => {
+        const row = document.createElement('tr');
+
+        const rollNoCell = document.createElement('td');
+        rollNoCell.textContent = element.rollno;
+        row.appendChild(rollNoCell);
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = element.name;
+        row.appendChild(nameCell);
+
+        const ageCell = document.createElement('td');
+        ageCell.textContent = element.age;
+        row.appendChild(ageCell);
+
+        const courseCell = document.createElement('td');
+        courseCell.textContent = element.course;
+        row.appendChild(courseCell);
+
+        const actionCell = document.createElement('td');
+        actionCell.innerHTML = `<button onclick="edit('${element.id}')"><i class="fa-solid fa-pen-to-square"></i></button>` + `<button onclick="deleteData(${element.id})"><i class='fas fa-trash-alt' style='font-size:15px'></i></button>`
+        row.appendChild(actionCell)
+        tableBody.appendChild(row);
+    })
+
+}
+
+
